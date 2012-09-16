@@ -9,7 +9,9 @@
 	<link rel="shortcut icon" href="{Favicon}">
 	<link rel="alternate" type="application/rss+xml" href="{RSS}">		
 	<!--Normalize CSS-->
-	<link rel="stylesheet" href="http://static.tumblr.com/cqczc5x/4n1m0ybpr/normalize.css" type="text/css" media="all">
+	<!-- <link rel="stylesheet" href="http://static.tumblr.com/cqczc5x/4n1m0ybpr/normalize.css" type="text/css" media="all"> -->
+	<link href='http://fonts.googleapis.com/css?family=Chivo:400normal' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="http://joshellington.com/css/style.css" type="text/css" media="all">
 	<style type="text/css">
 		/*Tumblr inherited */
 		.search_query {}
@@ -23,34 +25,40 @@
 	</style>
 	<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
-<body>
+<body class="blog">
+
+<div id="container">
 	<header id="header">
+		<nav><a href="http://joshellington.com">Home</a> {block:PermalinkPage}&mdash; {block:PostTitle}{PostTitle}{/block:PostTitle} {/block:PermalinkPage}</nav>
+
 		<h1 id="logo"><a href="/">{Title}</a></h1>
-		{block:Description}<div class="description">{Description}</div>{/block:Description}
+		{block:Description}<h4>{Description} {block:HasPages}{block:Pages}<a href="{URL}">{Label}</a>.{/block:Pages}{/block:HasPages}</h4>
+
+		<h4><a href="/archive">Check out the archive</a> or <a href="#" class="open-search">search for something</a>. {block:AskEnabled}<a href="/ask">Ask me something</a>.{/block:AskEnabled}</h4>{/block:Description}
+		
 		<ul id="nav">
 			{block:HasPages}{block:Pages}<li><a href="{URL}">{Label}</a></li>{/block:Pages}{/block:HasPages}
-			<li><a href="/archive">{lang:Archive}</a></li>
+			<li><a href="/archive">View the archive</a></li>
 			{block:AskEnabled}<li><a href="/ask">{AskLabel}</a></li>{/block:AskEnabled}
 		</ul>	
+
 		<form id="search" action="/search" method="get">
-			<input type="text" placeholder="{lang:Search}" name="q" value="{SearchQuery}">
-			<input type="submit" value="{lang:Search}">
+			<input type="text" placeholder="{lang:Search}" class="search-text" name="q" value="{SearchQuery}">
+			<input type="submit" value="{lang:Search}" style="display:none;">
 		</form>
 	</header>
 	<section class="content">
 		
 		{block:SearchPage}<p>{lang:Found SearchResultCount results for SearchQuery 2}</p>
 		{block:NoSearchResults}<p>{lang:No results for SearchQuery 2}</p>{/block:NoSearchResults}{/block:SearchPage}
+
+		{block:TagPage}<p>Posts tagged "{Tag}"</p>{/block:TagPage}
 			
 		{block:Posts}
 		<article class="post {TagsAsClasses}">
-			{block:Date}
-			{block:NewDayDate}<p>{DayOfWeek}, {Month} {DayOfMonth}, {Year}</p>{/block:NewDayDate}
-			{block:SameDayDate}<p>{DayOfWeek}, {Month} {DayOfMonth}, {Year}</p>{/block:SameDayDate}
-			{/block:Date}
 			{block:Text}
 			<div class="text">
-				{block:Title}<h3>{Title}</h3>{/block:Title}
+				{block:Title}<h3><a href="{Permalink}">{Title}</a></h3>{/block:Title}
 				{Body}
 			</div>
 			{/block:Text}
@@ -68,13 +76,13 @@
 			{/block:Link}
 			{block:Video}
 			<div class="video">
-				{Video-500}
+				{Video-600}
 				{block:Caption}<div class="caption">{Caption}</div>{/block:Caption}
 			</div>
 			{/block:Video}
 			{block:Audio}
 			<div class="audio">
-				{block:AlbumArt}<img src="{AlbumArtURL}" alt="">{/block:AlbumArt}							
+				{block:AlbumArt}<img src="{AlbumArtURL}" alt="">{/block:AlbumArt}
 				{AudioPlayerBlack}
 				{block:Caption}<div class="caption">{Caption}</div>{/block:Caption}
 			</div>
@@ -119,7 +127,31 @@
 				{Answer}
 			</div>
 			{/block:Answer}
-			{block:IndexPage}<p><a href="{Permalink}" class="permalink">{lang:Permalink}</a></p>{/block:IndexPage}
+
+			<div class="post-meta">
+				{block:Date}
+				{block:NewDayDate}<time><span class="iconic calendar_alt_fill"></span> {DayOfWeek}, {Month} {DayOfMonth}, {Year}</time>{/block:NewDayDate}
+				{block:SameDayDate}<time><span class="iconic calendar_alt_fill"></span> {DayOfWeek}, {Month} {DayOfMonth}, {Year}</time>{/block:SameDayDate}
+				{/block:Date}
+
+				{block:HasTags}
+				<span class="tags small">
+					<span class="iconic tag_fill"></span>
+					{block:Tags}
+					<a href="{TagURL}">{Tag} </a>
+					{/block:Tags}
+					{/block:HasTags}
+				</span>
+
+				{block:NoteCount}
+				<span class="small">
+					<span class="document_fill iconic"></span> {NoteCountWithLabel}
+				</span>
+				{/block:NoteCount}
+				
+			</div>
+
+			<!-- {block:IndexPage}<p><a href="{Permalink}" class="permalink">{lang:Permalink}</a></p>{/block:IndexPage} -->
 		</article>
 		{/block:Posts}
 
@@ -143,5 +175,24 @@
 		</div>
 		{/block:Pagination}
 	</section><!--close content-->
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script>
+$(function() {
+	$('.open-search').click(function() {
+		$('#search').toggle(0, function() { $('.search-text').focus() });
+		return false;
+	});
+});
+</script>
+
+<script>
+	var _gaq=[['_setAccount','UA-3355044-4'],['_trackPageview']];
+	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
 </body>
 </html>
